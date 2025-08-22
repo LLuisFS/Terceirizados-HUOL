@@ -32,3 +32,28 @@ class EmployeeSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+    class Config:
+        from_attributes = True
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    admin: Optional[bool] = False
+
+    class Config:
+        from_attributes = True
+
+class UserRead(BaseModel):
+    id: int
+    name: str
+    email: str
+    admin: bool
+
+    class Config:
+        from_attributes = True
