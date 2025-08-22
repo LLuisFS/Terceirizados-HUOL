@@ -1,29 +1,30 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
-class UserSchema(BaseModel):
+
+class UserCreate(BaseModel):
     name: str
     email: str
     password: str
-    admin: Optional[bool]
+    admin: Optional[bool] = False
 
     class Config:
         from_attributes = True
 
-class CompanySchema(BaseModel):
+class CompanyCreate(BaseModel):
     name: str
 
     class Config:
         from_attributes = True
 
-class ContractSchema(BaseModel):
+class ContractCreate(BaseModel):
     contract_number: str
     company_id: int
 
     class Config:
         from_attributes = True
 
-class EmployeeSchema(BaseModel):
+class EmployeeCreate(BaseModel):
     name: str
     cpf: str
     position: str
@@ -40,20 +41,42 @@ class Token(BaseModel):
     class Config:
         from_attributes = True
 
-class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
-    admin: Optional[bool] = False
-
-    class Config:
-        from_attributes = True
 
 class UserRead(BaseModel):
     id: int
     name: str
     email: str
     admin: bool
+
+    class Config:
+        from_attributes = True
+
+class CompanyRead(CompanyCreate):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class EmployeeRead(EmployeeCreate):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class ContractRead(ContractCreate):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class CompanyWithContracts(CompanyRead):
+    contracts: List[ContractRead] = []
+
+    class Config:
+        from_attributes = True
+
+class ContractWithEmployees(ContractRead):
+    employees: List[EmployeeRead] = []
 
     class Config:
         from_attributes = True
