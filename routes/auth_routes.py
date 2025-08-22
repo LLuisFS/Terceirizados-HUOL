@@ -4,10 +4,20 @@ from sqlalchemy.orm import Session
 from schemas import UserCreate, UserRead, Token
 from models import User
 from dependencies import take_session
-from main import bcrypt_context, create_token
+from main import bcrypt_context
+from datetime import datetime, timedelta, timezone
+from jose import jwt
+from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
+def create_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 def authenticate_user(email: str, password: str, session: Session):
     user = session.query(User).filter(User.email == email).first()
