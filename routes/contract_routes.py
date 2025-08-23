@@ -6,16 +6,17 @@ from schemas import ContractRead, ContractWithEmployees, ContractCreate
 from dependencies import take_session, get_current_user, get_current_admin_user
 
 
-contracts_router = APIRouter(prefix="/contracts", tags=["Contracts"])
+contracts_router = APIRouter(prefix="/contracts", tags=["contracts"])
 
 @contracts_router.get("/", response_model=List[ContractRead])
 async def get_contracts(
-        skip: int = 0,
-        limit: int = 100,
+        page: int = 1,
+        size: int = 100,
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_user)
 ):
-    companies = db.query(Contract).offset(skip).limit(limit).all()
+    skip = (page - 1) * size
+    companies = db.query(Contract).offset(skip).limit(size).all()
     return companies
 
 @contracts_router.get("/{contract_id}", response_model=ContractRead)
@@ -43,11 +44,10 @@ async def get_contract_details(
 @contracts_router.post("/", response_model=ContractRead, status_code=201)
 async def create_contract(
         contract: ContractCreate,
-        company_id: int,
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_admin_user)
 ):
-    db_contract = Contract(contract_number=contract.contract_number, company_id=company_id)
+    db_contract = Contract(contract_number=contract.contract_number, company_id=contract.company_id)
     db.add(db_contract)
     db.commit()
     db.refresh(db_contract)
@@ -64,6 +64,7 @@ async def update_contract(
     if db_contract is None:
         raise HTTPException(status_code=404, detail="Contract not found")
     db_contract.contract_number = contract.contract_number
+    db_contract.company_id = contract.company_id
     db.commit()
     db.refresh(db_contract)
     return db_contract

@@ -9,12 +9,13 @@ companies_router = APIRouter(prefix="/companies", tags=["companies"])
 
 @companies_router.get("/", response_model=List[CompanyRead])
 async def get_companies(
-        skip: int = 0,
-        limit: int = 100,
+        page: int = 0,
+        size: int = 100,
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_user),
 ):
-    companies = db.query(Company).offset(skip).limit(limit).all()
+    skip = (page - 1) * size
+    companies = db.query(Company).offset(skip).limit(size).all()
     return companies
 
 @companies_router.get("/{company_id}", response_model=CompanyRead)
