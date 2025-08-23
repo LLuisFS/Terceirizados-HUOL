@@ -16,8 +16,8 @@ async def get_contracts(
         current_user: User = Depends(get_current_user)
 ):
     skip = (page - 1) * size
-    companies = db.query(Contract).offset(skip).limit(size).all()
-    return companies
+    db_contracts = db.query(Contract).offset(skip).limit(size).all()
+    return db_contracts
 
 @contracts_router.get("/{contract_id}", response_model=ContractRead)
 async def get_contract(
@@ -25,10 +25,10 @@ async def get_contract(
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_user)
 ):
-    company = db.query(Contract).get(contract_id).first()
-    if not company:
+    db_contract = db.query(Contract).get(contract_id).first()
+    if not db_contract:
         raise HTTPException(status_code=404, detail="Contract not found")
-    return company
+    return db_contract
 
 @contracts_router.get("/{contract_id}/details", response_model=ContractWithEmployees)
 async def get_contract_details(
