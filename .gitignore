@@ -3,3 +3,13 @@
 /__pycache__
 .env
 database.db
+routes/__pycache__/auth_routes.cpython-313.pyc
+routes/__pycache__/companies_routes.cpython-313.pyc
+routes/__pychache__/contracts_routes.cpython-313.pyc
+routes/__pycache__/employees_routes.cpython-313.pyc
+*.pyc
+*.pyc
+/routes/__pycache__
+routes/__pycache__/auth_routes.cpython-313.pyc
+*.db
+database.db
