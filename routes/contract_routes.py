@@ -63,8 +63,10 @@ async def update_contract(
     db_contract = db.query(Contract).filter(Contract.id == contract_id).first()
     if db_contract is None:
         raise HTTPException(status_code=404, detail="Contract not found")
-    db_contract.contract_number = contract.contract_number
-    db_contract.company_id = contract.company_id
+
+    update_data = contract.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_contract, key, value)
     db.commit()
     db.refresh(db_contract)
     return db_contract

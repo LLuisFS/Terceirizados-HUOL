@@ -80,3 +80,11 @@ class ContractWithEmployees(ContractRead):
 
     class Config:
         from_attributes = True
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    admin: Optional[bool] = None
+
+    class Config:
+        from_attributes = True

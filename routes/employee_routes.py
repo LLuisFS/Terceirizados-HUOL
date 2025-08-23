@@ -53,11 +53,10 @@ async def update_employee(
     db_employee = db.query(Employee).filter(Employee.id == employee_id).first()
     if not db_employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-    db_employee.name = employee.name
-    db_employee.cpf = employee.cpf
-    db_employee.position = employee.position
-    db_employee.sector = employee.sector
-    db_employee.contract_id = employee.contract_id
+
+    update_data = employee.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_employee, key, value)
     db.commit()
     db.refresh(db_employee)
     return db_employee

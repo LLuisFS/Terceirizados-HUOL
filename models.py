@@ -15,8 +15,6 @@ class Contract(Base):
     id = Column(Integer, primary_key=True)
     contract_number = Column(String, unique=True, nullable=False)
     company_id = Column(Integer, ForeignKey('companies.id'), nullable=False)
-
-
     company = relationship('Company', back_populates='contracts')
     employees = relationship('Employee', back_populates='contract')
 

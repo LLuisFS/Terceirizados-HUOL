@@ -63,7 +63,9 @@ async def update_company(
     if db_company is None:
         raise HTTPException(status_code=404, detail="Company not found")
 
-    db_company.name = company.name
+    update_data = company.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_company, key, value)
     db.commit()
     db.refresh(db_company)
     return db_company
