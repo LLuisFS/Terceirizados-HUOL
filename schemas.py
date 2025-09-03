@@ -88,3 +88,11 @@ class UserUpdate(BaseModel):
 
     class Config:
         from_attributes = True
+
+class MultiSearchResponse(BaseModel):
+    companies: List[CompanyRead]
+    contracts: List[ContractRead]
+    employees: List[EmployeeRead]
+    
+    class Config:
+        from_attributes = True
