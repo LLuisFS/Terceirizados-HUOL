@@ -5,27 +5,44 @@ from typing import List
 from models import User, Company, Contract, Employee
 from schemas import MultiSearchResponse
 from dependencies import take_session, get_current_user
+from enum import Enum
 
 search_router = APIRouter(prefix="/search", tags=["search"])
 
-@search_router.get("/", response_model=List[MultiSearchResponse])
+class SearchType(str, Enum):
+    company = "company"
+    contract = "contract"
+    employee = "employee"
+
+@search_router.get("/", response_model=MultiSearchResponse)
 async def multi_entity_search(
         q: str = Query(..., min_lenght=3, description="Termo de busca com no mínimo 3 caracteres"),
+        type: SearchType | None = Query(default=None, description="Filtre a busca por um tipo de entidade"),
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_user)
 ):
     search_term = f"{q.lower()}%"
-    found_companies = db.query(Company).filter(Company.name.ilike(search_term)).all()
-    found_contracts = db.query(Contract).filter(Contract.contract_number.ilike(search_term)).all()
-    found_employees = db.query(Employee).filter(
+    found_companies = []
+    found_contracts = []
+    found_employees = []
+
+    if type is None or type == SearchType.company:
+        found_companies = db.query(Company).filter(Company.name.ilike(search_term)).all()
+
+    if type is None or type == SearchType.contract:
+        found_contracts = db.query(Contract).filter(Contract.contract_number.ilike(search_term)).all()
+
+    if type is None or type == SearchType.employee:
+        found_employees = db.query(Employee).filter(
             or_(
                 Employee.name.ilike(search_term),
                 Employee.position.ilike(search_term),
                 Employee.sector.ilike(search_term)
-            )).all()
+            )
+        ).all()
 
     return {
         "companies": found_companies,
         "contracts": found_contracts,
-        "employees": found_employees,
+        "employees": found_employees
     }
