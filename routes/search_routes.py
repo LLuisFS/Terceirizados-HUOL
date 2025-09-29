@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from typing import List
 from models import User, Company, Contract, Employee
 from schemas import MultiSearchResponse
 from dependencies import take_session, get_current_user
