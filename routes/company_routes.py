@@ -12,10 +12,14 @@ async def get_companies(
         page: int = 0,
         size: int = 100,
         db: Session = Depends(take_session),
+        name: str | None = None,
         current_user: User = Depends(get_current_user),
 ):
     skip = (page - 1) * size
-    companies = db.query(Company).offset(skip).limit(size).all()
+    query = db.query(Company)
+    if name:
+        query = query.filter(Company.name.ilike(f"{name}"))
+    companies = query.offset(skip).limit(size).all()
     return companies
 
 @companies_router.get("/{company_id}", response_model=CompanyRead)

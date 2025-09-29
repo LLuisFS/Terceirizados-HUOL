@@ -14,10 +14,19 @@ async def get_employees(
         page: int = 1,
         size: int = 100,
         db: Session = Depends(take_session),
+        position: str | None = None,
+        sector: str | None = None,
         current_user: User = Depends(get_current_user)
 ):
     skip = (page - 1) * size
-    db_employees = db.query(Employee).offset(skip).limit(size).all()
+    query = db.query(Employee)
+
+    if position:
+        query = query.filter(Employee.position.ilike(f"{position}"))
+    if sector:
+        query = query.filter(Employee.sector.ilike(f"{sector}"))
+
+    db_employees = query.offset(skip).limit(size).all()
     return db_employees
 
 @employees_router.get("/{employee_id}", response_model=EmployeeRead)

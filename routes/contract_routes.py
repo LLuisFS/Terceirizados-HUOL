@@ -12,11 +12,17 @@ contracts_router = APIRouter(prefix="/contracts", tags=["contracts"])
 async def get_contracts(
         page: int = 1,
         size: int = 100,
+        cnumber: str | None = None,
         db: Session = Depends(take_session),
         current_user: User = Depends(get_current_user)
 ):
+    query = db.query(Contract)
     skip = (page - 1) * size
-    db_contracts = db.query(Contract).offset(skip).limit(size).all()
+
+    if cnumber:
+        query = query.filter(Contract.contract_number.ilike(f"{cnumber}"))
+
+    db_contracts = query.offset(skip).limit(size).all()
     return db_contracts
 
 @contracts_router.get("/{contract_id}", response_model=ContractRead)
