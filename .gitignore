@@ -9,5 +9,6 @@ routes/__pychache__/contracts_routes.cpython-313.pyc
 routes/__pycache__/employees_routes.cpython-313.pyc
 *.pyc
 /routes/__pycache__
-*.db
+diagnostico_csv.py
+populate_db.py
 
