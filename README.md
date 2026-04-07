@@ -16,10 +16,6 @@ Esta API RESTful foi desenvolvida com o objetivo de promover **transparência e 
 
 Embora tenha nascido como um projeto acadêmico de Técnicas de Programação, a arquitetura foi desenhada simulando um ambiente de produção moderno, focando em segurança (autenticação JWT e controle de acesso) e performance no consumo de dados.
 
-> **Visualização Rápida:**
-> *(DICA: Adicione aqui um GIF curto de 5 a 10 segundos mostrando você fazendo uma requisição no Swagger e recebendo o JSON)*
-> `![Demonstração da API](caminho/para/seu/gif.gif)`
-
 ## 🚀 Funcionalidades Principais
 
 - **Segurança e Auditoria:** Sistema de autenticação JWT (`Bearer tokens`) com controle de acesso rigoroso. Usuários comuns possuem acesso de leitura (transparência), enquanto administradores gerenciam a base (CRUD).
