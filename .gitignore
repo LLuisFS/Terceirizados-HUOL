@@ -10,6 +10,7 @@ routes/__pycache__/employees_routes.cpython-313.pyc
 *.pyc
 /routes/__pycache__
 diagnostico_csv.py
+.gitigore
 populate_db.py
-.gitignore
+
 
